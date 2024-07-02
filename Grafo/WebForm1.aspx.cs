@@ -1,16 +1,15 @@
 ﻿using ClassGrafoEntidades;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+using System.Web.Script.Serialization;
+using System.Web.Services;
 
 namespace Grafo
 {
     public partial class WebForm1 : System.Web.UI.Page
     {
-        GrafoLibros grafo1 = new GrafoLibros();
+        private static GrafoLibros grafo1 = new GrafoLibros();
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!this.IsPostBack)
@@ -24,12 +23,39 @@ namespace Grafo
             }
         }
 
+        [WebMethod]
+        public static void InsertarNodo(string Titulo, string Autor, int Id)
+        {
+            Libro nuevo = new Libro
+            {
+                Titulo = Titulo,
+                Autor = Autor,
+                Id = Id
+            };
+            grafo1.InsertarNodo(nuevo);
+        }
+
+        [WebMethod]
+        public static string ObtenerGrafo()
+        {
+            var nodos = grafo1.ObtenerNodos();
+            var aristas = grafo1.ObtenerAristas();
+
+            var grafoLibros = new
+            {
+                nodos = nodos,
+                aristas = aristas
+            };
+
+            return new JavaScriptSerializer().Serialize(grafoLibros);
+        }
+
         protected void btnInsertarNodo_Click(object sender, EventArgs e)
         {
             Libro nuevo = new Libro
             {
-                Titulo=txtTitulo.Text,
-                Autor=txtAutor.Text,
+                Titulo = txtTitulo.Text,
+                Autor = txtAutor.Text,
                 Id = Convert.ToInt16(txtId.Text)
             };
             grafo1.InsertarNodo(nuevo);

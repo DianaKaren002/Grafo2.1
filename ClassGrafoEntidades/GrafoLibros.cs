@@ -32,6 +32,25 @@ namespace ClassGrafoEntidades
                 nodoOrigen.Adyacentes.Add(nodoDestino);
             }
         }
+        public List<Libro> ObtenerNodos()
+        {
+            return nodos.Values.Select(n => n.Informacion).ToList();
+        }
+
+        public List<Arista> ObtenerAristas()
+        {
+            var aristas = new List<Arista>();
+
+            foreach (var nodo in nodos.Values)
+            {
+                foreach (var adyacente in nodo.Adyacentes)
+                {
+                    aristas.Add(new Arista { Desde = nodo.Informacion.Titulo, Hasta = adyacente.Informacion.Titulo });
+                }
+            }
+
+            return aristas;
+        }
 
         public List<string> DFS(string inicio)
         {
