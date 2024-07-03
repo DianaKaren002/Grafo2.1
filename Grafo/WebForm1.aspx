@@ -84,48 +84,79 @@
         }
 
         function graficarGrafo(grafoLibros) {
-            const radius = 200;
-            const nodesWithPosition = calculateCircularPositions(grafoLibros.nodos, radius);
+    const radius = 200;
+    const nodesWithPosition = calculateCircularPositions(grafoLibros.nodos, radius);
 
-            const nodes = new vis.DataSet(nodesWithPosition.map(libro => ({
-                id: libro.Id,
-                label: libro.Titulo,
-                x: libro.x,
-                y: libro.y,
-                fixed: true
-            })));
+    const nodes = new vis.DataSet(nodesWithPosition.map(libro => ({
+        id: libro.Id,
+        label: libro.Titulo,
+        x: libro.x,
+        y: libro.y,
+        fixed: true
+    })));
 
-            const edges = new vis.DataSet(grafoLibros.aristas.map(arista => ({
-                from: arista.Desde,
-                to: arista.Hasta
-            })));
+    const edges = new vis.DataSet(grafoLibros.aristas.map(arista => ({
+        from: arista.Desde,
+        to: arista.Hasta
+    })));
 
-            const container = document.getElementById('mynetwork');
-            const data = {
-                nodes: nodes,
-                edges: edges
-            };
-            const options = {
-                physics: false
-            };
-            const network = new vis.Network(container, data, options);
+    const container = document.getElementById('mynetwork');
+    const data = {
+        nodes: nodes,
+        edges: edges
+    };
+
+    const options = {
+        physics: false
+    };
+
+    const network = new vis.Network(container, data, options);
+
+    const lineNodes = nodesWithPosition.map(libro => ({
+        id: `line_${libro.Id}`,
+        label: libro.Titulo,
+        x: libro.x,
+        y: libro.y,
+        fixed: true
+    }));
+
+    const lineEdges = grafoLibros.aristas.map(arista => ({
+        from: `line_${arista.Desde}`,
+        to: `line_${arista.Hasta}`
+    }));
+
+    for (let i = 0; i < lineNodes.length - 1; i++) {
+        lineEdges.push({ from: lineNodes[i].id, to: lineNodes[i + 1].id });
+    }
+
+    const lineData = {
+        nodes: new vis.DataSet(lineNodes),
+        edges: new vis.DataSet(lineEdges)
+    };
+
+    const lineNetwork = new vis.Network(container, lineData, {
+        physics: false,
+        edges: {
+            color: 'red' 
         }
+    });
+}
 
-        function calculateCircularPositions(nodes, radius) {
-            const angleStep = (2 * Math.PI) / nodes.length;
-            return nodes.map((node, index) => {
-                const angle = index * angleStep;
-                return {
-                    ...node,
-                    x: radius * Math.cos(angle),
-                    y: radius * Math.sin(angle)
-                };
-            });
-        }
+function calculateCircularPositions(nodes, radius) {
+    const angleStep = (2 * Math.PI) / nodes.length;
+    return nodes.map((node, index) => {
+        const angle = index * angleStep;
+        return {
+            ...node,
+            x: radius * Math.cos(angle),
+            y: radius * Math.sin(angle)
+        };
+    });
+}
 
-        $(document).ready(function () {
-            obtenerGrafo();
-        });
+$(document).ready(function () {
+    obtenerGrafo();
+});
     </script>
 </body>
 </html>
