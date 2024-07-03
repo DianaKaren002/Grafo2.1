@@ -24,16 +24,17 @@
                     <div class="col-md-6">
                         <div class="container">
                             <div class="list">
+                                      
                                 <h2>Insertar Nodo</h2>
                                 <asp:TextBox ID="txtId" runat="server" CssClass="form-control" Placeholder="Id del Libro" TextMode="Number"></asp:TextBox><br />
 
                                 <asp:TextBox ID="txtTitulo" runat="server" CssClass="form-control" Placeholder="Título del Libro"></asp:TextBox><br />
 
                                 <asp:TextBox ID="txtAutor" runat="server" CssClass="form-control" Placeholder="Autor del Libro"></asp:TextBox><br />
-
+                         
                                 <asp:Button class="btn btn-outline-danger" ID="btnInsertarNodo" runat="server" Text="Insertar Nodo" OnClick="btnInsertarNodo_Click" /><br />
                                 <br />
-                                <asp:Label ID="lblResultado" runat="server" Text=""></asp:Label>
+                                
 
                                 <h2>Insertar Arco</h2>
                                 <asp:TextBox ID="txtOrigen" runat="server" CssClass="form-control" Placeholder="Título del Nodo Origen"></asp:TextBox><br />
@@ -60,10 +61,12 @@
                         </div>
                     </div>
                     <div class="col-md-6">
+                        
                         <h1 class="title-user">visualizacion <span class="landing-user">del Grafo</span> </h1>
                         <div class="d-flex justify-content-center contenerdor-img-user">
                             <div id="mynetwork" style="width: 800px; height: 600px; border: 1px solid lightgray;"></div>
                         </div>
+                         <asp:Label ID="lblResultado" class="message" runat="server" Text=""></asp:Label>
                     </div>
                 </div>
             </div>

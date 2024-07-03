@@ -10,4 +10,11 @@
     padding: 20px;
     TEXT-ALIGN: center;
 }
+.message {
+    color: #5aa2e1;
+    font: 700 20px 'Inter', sans-serif;
+    margin-top: 34px;
+    padding: 20px;
+    TEXT-ALIGN: center;
+}
 
