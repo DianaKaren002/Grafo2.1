@@ -83,22 +83,50 @@
             });
         }
 
-        function graficarGrafo(grafoLibros) {
+        let network;
+let nodes = new vis.DataSet();
+let edges = new vis.DataSet();
+
+function graficarGrafo(grafoLibros) {
     const radius = 200;
     const nodesWithPosition = calculateCircularPositions(grafoLibros.nodos, radius);
 
-    const nodes = new vis.DataSet(nodesWithPosition.map(libro => ({
-        id: libro.Id,
-        label: libro.Titulo,
-        x: libro.x,
-        y: libro.y,
-        fixed: true
-    })));
+    nodes.clear(); //limpia los datos y los vuelve a agregar
+    nodesWithPosition.forEach(libro => {
+        nodes.add({
+            id: libro.Id,
+            label: libro.Titulo,
+            x: libro.x,
+            y: libro.y,
+            fixed: true
+        });
+    });
 
-    const edges = new vis.DataSet(grafoLibros.aristas.map(arista => ({
-        from: arista.Desde,
-        to: arista.Hasta
-    })));
+    // se crean aristas consecutivas cuando se va agregando los nodos
+    const consecutiveEdges = [];
+    for (let i = 0; i < nodesWithPosition.length - 1; i++) {
+        consecutiveEdges.push({ from: nodesWithPosition[i].Id, to: nodesWithPosition[i + 1].Id });
+    }
+
+    // aqui se hacen las aristas que se crean desde el formulario  
+    const formEdges = grafoLibros.aristas.map(arista => {
+        const fromNode = nodes.get({
+            filter: node => node.label === arista.Desde
+        })[0];
+        const toNode = nodes.get({
+            filter: node => node.label === arista.Hasta
+        })[0];
+        if (fromNode && toNode) { 
+            return { from: fromNode.id, to: toNode.id };
+        } else {
+            console.error(`Nodo no encontrado para la arista: Desde ${arista.Desde}, Hasta ${arista.Hasta}`);
+            return null;
+        }
+    }).filter(edge => edge !== null); // filtro pra aristas invalidas
+
+    // limpua y agrega aristas nuevamente
+    edges.clear();
+    edges.add([...consecutiveEdges, ...formEdges]);
 
     const container = document.getElementById('mynetwork');
     const data = {
@@ -107,39 +135,16 @@
     };
 
     const options = {
-        physics: false
-    };
-
-    const network = new vis.Network(container, data, options);
-
-    const lineNodes = nodesWithPosition.map(libro => ({
-        id: `line_${libro.Id}`,
-        label: libro.Titulo,
-        x: libro.x,
-        y: libro.y,
-        fixed: true
-    }));
-
-    const lineEdges = grafoLibros.aristas.map(arista => ({
-        from: `line_${arista.Desde}`,
-        to: `line_${arista.Hasta}`
-    }));
-
-    for (let i = 0; i < lineNodes.length - 1; i++) {
-        lineEdges.push({ from: lineNodes[i].id, to: lineNodes[i + 1].id });
-    }
-
-    const lineData = {
-        nodes: new vis.DataSet(lineNodes),
-        edges: new vis.DataSet(lineEdges)
-    };
-
-    const lineNetwork = new vis.Network(container, lineData, {
         physics: false,
         edges: {
             color: 'red' 
-        }
-    });
+    };
+
+    if (!network) {
+        network = new vis.Network(container, data, options);
+    } else {
+        network.setData(data);
+    }
 }
 
 function calculateCircularPositions(nodes, radius) {
@@ -157,6 +162,7 @@ function calculateCircularPositions(nodes, radius) {
 $(document).ready(function () {
     obtenerGrafo();
 });
+
     </script>
 </body>
 </html>
