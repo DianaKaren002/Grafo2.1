@@ -44,6 +44,8 @@
     <Compile Include="Arista.cs" />
     <Compile Include="GrafoLibros.cs" />
     <Compile Include="Libro.cs" />
+    <Compile Include="ListaAristas.cs" />
+    <Compile Include="ListaNodos.cs" />
     <Compile Include="Nodo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
