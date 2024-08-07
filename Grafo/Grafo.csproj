@@ -77,6 +77,9 @@
   <ItemGroup>
     <Content Include="CSS\Estilos.css" />
     <Content Include="Img\Fondo.png" />
+    <Content Include="JavaScript\circulo.js" />
+    <Content Include="JavaScript\Radar.js" />
+    <Content Include="JavaScript\Trigonometria.js" />
     <Content Include="Web.config" />
     <Content Include="WebForm1.aspx" />
   </ItemGroup>
