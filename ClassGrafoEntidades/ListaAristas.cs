@@ -14,7 +14,12 @@ namespace ClassGrafoEntidades
 
         public IEnumerator<ListaNodos> GetEnumerator()
         {
-            throw new NotImplementedException();
+            ListaNodos z = inicio;
+            while (z != null)
+            {
+                yield return z;
+                z = z.siguiente;
+            }
         }
 
         public string InsertaObjeto(int numVertices, float costo)
@@ -42,8 +47,16 @@ namespace ClassGrafoEntidades
             }
             return msj;
         }
+        public IEnumerable<ListaNodos> mostrarDatosColeccion()
+        {
+            ListaNodos z = inicio;
+            while (z != null)
+            {
+                yield return z;
+                z = z.siguiente;
+            }
+        }
 
-       
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();

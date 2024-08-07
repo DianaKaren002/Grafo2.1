@@ -1,6 +1,8 @@
 ﻿using ClassGrafoEntidades;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Script.Serialization;
 using System.Web.Services;
 
@@ -8,7 +10,7 @@ namespace Grafo
 {
     public partial class WebForm1 : System.Web.UI.Page
     {
-        private static GrafoLibros grafo1 = new GrafoLibros();
+        private static GrafoLibros grafo1 = null;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -38,13 +40,11 @@ namespace Grafo
         [WebMethod]
         public static string ObtenerGrafo()
         {
-            var nodos = grafo1.ObtenerNodos();
-            var aristas = grafo1.ObtenerAristas();
+            var nodos = grafo1.MuestraNodos();
 
             var grafoLibros = new
             {
-                nodos = nodos,
-                aristas = aristas
+                nodos = nodos
             };
 
             return new JavaScriptSerializer().Serialize(grafoLibros);
@@ -61,39 +61,40 @@ namespace Grafo
             grafo1.InsertarNodo(nuevo);
             Session["grafo1"] = grafo1;
             lblResultado.Text = $"Nodo '{nuevo.Titulo}' insertado correctamente.";
+
+            
         }
+    
 
         protected void btnInsertarArco_Click(object sender, EventArgs e)
         {
-            string origen = txtOrigen.Text;
-            string destino = txtDestino.Text;
+            int origen = Convert.ToInt16(txtOrigen.Text);
+            int destino = Convert.ToInt16(txtDestino.Text);
+            int costo = Convert.ToInt16(txtCosto.Text);
 
-            if (grafo1.nodos.ContainsKey(origen) && grafo1.nodos.ContainsKey(destino))
+            if(txtOrigen.Text == null && txtDestino.Text == null && txtCosto.Text == null)
             {
-                grafo1.InsertarArco(origen, destino);
-
-                // Actualizar la variable de sesión
-                Session["grafo1"] = grafo1;
-
-                txtOrigen.Text = string.Empty;
-                txtDestino.Text = string.Empty;
-
-                lblResultado.Text = $"Arco de '{origen}' a '{destino}' insertado correctamente.";
+                lblResultado.Text = "LLena todos los datos";
             }
             else
             {
-                lblResultado.Text = "Error: Verifique que ambos nodos existen en el grafo.";
+                grafo1.InsertarArco(origen, destino, costo);
             }
         }
 
         protected void btnDFS_Click(object sender, EventArgs e)
         {
-            string inicio = txtDFSInicio.Text;
-            if (grafo1.nodos.ContainsKey(inicio))
+            int inicio = Convert.ToInt16(txtDFSInicio.Text);
+            if (inicio != 0)
             {
-                List<string> resultado = grafo1.DFS(inicio);
+                List<int> resultado = grafo1.DFS(inicio);
 
                 lblResultado.Text = "Recorrido en Profundidad: " + string.Join(" -> ", resultado);
+                ListDFS.Items.Clear();
+                foreach (int v in resultado)
+                {
+                    ListDFS.Items.Add(v.ToString());
+                }
             }
             else
             {
@@ -103,12 +104,17 @@ namespace Grafo
 
         protected void btnBFS_Click(object sender, EventArgs e)
         {
-            string inicio = txtBFSInicio.Text;
-            if (grafo1.nodos.ContainsKey(inicio))
+            int inicio = Convert.ToInt16(txtBFSInicio.Text);
+            if (inicio !=0)
             {
-                List<string> resultado = grafo1.BFS(inicio);
+                List<int> resultado = grafo1.BFS(inicio);
 
                 lblResultado.Text = "Recorrido en Amplitud: " + string.Join(" -> ", resultado);
+                ListBFS.Items.Clear();
+                foreach (int v in resultado)
+                {
+                    ListDFS.Items.Add(v.ToString());
+                }
             }
             else
             {
@@ -118,19 +124,36 @@ namespace Grafo
 
         protected void btnDijkstra_Click(object sender, EventArgs e)
         {
-            string inicio = txtDijkstraInicio.Text;
-            string fin = txtDijkstraFin.Text;
+            int inicio = Convert.ToInt16(txtDijkstraInicio.Text);
+            int fin = Convert.ToInt16(txtDijkstraFin.Text);
 
-            if (grafo1.nodos.ContainsKey(inicio) && grafo1.nodos.ContainsKey(fin))
+            if (inicio != -1 && fin != -1)
             {
-                List<string> resultado = grafo1.Dijkstra(inicio, fin);
+                List<int> resultadoIndices = grafo1.Dijkstra(inicio, fin);
+                List<string> resultadoTitulos = resultadoIndices.Select(indice => grafo1.ListaAbyacente[indice].Informacion.Titulo).ToList();
 
-                lblResultado.Text = "Camino Más Corto: " + string.Join(" -> ", resultado);
+                lblResultado.Text = "Camino Más Corto: " + string.Join(" -> ", resultadoTitulos);
             }
             else
             {
                 lblResultado.Text = "Error: Verifique que ambos nodos existen en el grafo.";
             }
+        }
+
+        protected void btnMostrarGrafo_Click(object sender, EventArgs e)
+        {
+            var verticesJson = JsonConvert.SerializeObject(grafo1.ListaAbyacente.Select(nodo => new {
+                numeroDato = nodo.Informacion.Id,
+                nombreDato = nodo.Informacion.Titulo,
+                aristas = nodo.enlaces.mostrarDatosColeccion().Select(a => new {
+                    numeroDato = grafo1.ListaAbyacente[a.NumVertice].Informacion.Id,
+                    nombreDato = grafo1.ListaAbyacente[a.NumVertice].Informacion.Titulo,
+                    costo = a.Costo
+                })
+            }));
+
+            string script = $"console.log({verticesJson}); mostrarGrafo({verticesJson});";
+            ClientScript.RegisterStartupScript(this.GetType(), "MostrarGrafo", script, true);
         }
     }
 }
