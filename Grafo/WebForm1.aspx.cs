@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Script.Serialization;
 using System.Web.Services;
+using System.Web.UI;
 
 namespace Grafo
 {
@@ -52,6 +53,7 @@ namespace Grafo
 
         protected void btnInsertarNodo_Click(object sender, EventArgs e)
         {
+            string msj = "";
             Libro nuevo = new Libro
             {
                 Titulo = txtTitulo.Text,
@@ -62,7 +64,7 @@ namespace Grafo
             Session["grafo1"] = grafo1;
             lblResultado.Text = $"Nodo '{nuevo.Titulo}' insertado correctamente.";
 
-            
+            ClientScript.RegisterStartupScript(this.GetType(), "MostrarGrafo",msj, true);
         }
     
 
@@ -79,6 +81,8 @@ namespace Grafo
             else
             {
                 grafo1.InsertarArco(origen, destino, costo);
+                lblResultado.Text = "Arco insertado";
+                Session["grafo1"] = grafo1;
             }
         }
 
@@ -143,8 +147,8 @@ namespace Grafo
         protected void btnMostrarGrafo_Click(object sender, EventArgs e)
         {
             var verticesJson = JsonConvert.SerializeObject(grafo1.ListaAbyacente.Select(nodo => new {
-                numeroDato = nodo.Informacion.Id,
-                nombreDato = nodo.Informacion.Titulo,
+                Id = nodo.Informacion.Id,
+                Titulo = nodo.Informacion.Titulo,
                 aristas = nodo.enlaces.mostrarDatosColeccion().Select(a => new {
                     numeroDato = grafo1.ListaAbyacente[a.NumVertice].Informacion.Id,
                     nombreDato = grafo1.ListaAbyacente[a.NumVertice].Informacion.Titulo,

@@ -1,7 +1,7 @@
-﻿function mostrarGrafo(verticesJson) {
+﻿function mostrarGrafo(vertices) {
     var canvas = document.getElementById("MiCanvas");
     var context = canvas.getContext('2d');
-    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.clearRect(0, 0, canvas.width, canvas.height); // Limpiar el canvas
 
     // obtener las dimensiones completas del área de dibujo
     let tx = canvas.width;
@@ -9,30 +9,29 @@
     let xc = tx / 2;
     let yc = ty / 2;
 
-    // el centro de la forma circular
+    
     let circentro = new Circulo(xc, yc, 5, 'red');
     circentro.draw(context);
-
-    // se generan los puntos en la circunferencia
     let grados = 0;
-    let inc_grados = 360 / verticesJson.length;
+    let inc_grados = 360 / vertices.length; 
     let hipote = 280;
     let radiocir = 50;
     let trigo2 = new Trigonometria(grados, hipote);
     let uncirculo = new Circulo();
     let radianes = 0;
 
-    // para obtener los valores hacia la forma circular
+    // variables para obtener los valores de x y y con respecto a la forma circular 
     let xxc = 0;
     let yyc = 0;
     let circulos = [];
 
     // Dibujar los vértices y sus líneas al centro
-    for (let i = 0; i < verticesJson.length; i++) {
+    for (let i = 0; i < vertices.length; i++) {
         grados = i * inc_grados;
-        radianes = (2 * Math.PI * grados) / 360; // conversión de los radianes
+        // convertir a radianes
+        radianes = (2 * Math.PI * grados) / 360;
         trigo2.angulo = radianes;
-
+        // calcular los catetos
         xxc = xc + trigo2.obtenerAdyacente();
         yyc = yc - trigo2.obtenerOpuesto();
         uncirculo.posiX = xxc;
@@ -41,30 +40,27 @@
         uncirculo.color = '#2E69D2';
         uncirculo.draw(context);
 
-        circulos.push({
-            x: xxc,
-            y: yyc,
-            radio: radiocir,
-            Id: verticesJson[i].Id,
-            Titulo: verticesJson[i].Titulo,
-            aristas: verticesJson[i].aristas
-        });
+        circulos.push({ x: xxc, y: yyc, radio: radiocir, Titulo: vertices[i].Titulo, aristas: vertices[i].aristas });
+
+        // Cambios
         context.textAlign = "center";
         context.textBaseline = "middle";
         context.font = "18px Candara";
-        context.fillText(verticesJson[i].Titulo, xxc, yyc);
+        context.fillText(vertices[i].Titulo, xxc, yyc);
     }
 
     for (let i = 0; i < circulos.length; i++) {
         let circActual = circulos[i];
         for (let j = 0; j < circActual.aristas.length; j++) {
             let arista = circActual.aristas[j];
-            let circDestino = circulos.find(c => c.numeroDato == arista.numeroDato);
+            let circDestino = circulos.find(c => c.Titulo == arista.Titulo);
             if (circDestino) {
-                drawArrow(context, circActual.x, circActual.y, circDestino.x, circDestino.y, circActual.radio, circDestino.radio, arista.costo);
+                drawArrow(context, circActual.x, circActual.y, circDestino.x, circDestino.y, circActual.radio, circDestino.radio);
             }
         }
     }
+    
+
 }
 //para crear la flecha 
 function drawArrow(context, fromX, fromY, toX, toY, fromRadius, toRadius) {
