@@ -1,5 +1,6 @@
-﻿function mostrarGrafo(vertices) {
-    var canvas = document.getElementById("MiCanvas");
+﻿
+function mostrarGrafo(vertices) {
+    var canvas = document.getElementById("miCanvas");
     var context = canvas.getContext('2d');
     context.clearRect(0, 0, canvas.width, canvas.height); // Limpiar el canvas
 
@@ -9,11 +10,10 @@
     let xc = tx / 2;
     let yc = ty / 2;
 
-    
-    let circentro = new Circulo(xc, yc, 5, 'red');
-    circentro.draw(context);
+
+    // vamos a generar todos los puntos a lo largo de una circunferencia
     let grados = 0;
-    let inc_grados = 360 / vertices.length; 
+    let inc_grados = 360 / vertices.length; // Ajuste automático del incremento de grados
     let hipote = 280;
     let radiocir = 50;
     let trigo2 = new Trigonometria(grados, hipote);
@@ -53,39 +53,40 @@
         let circActual = circulos[i];
         for (let j = 0; j < circActual.aristas.length; j++) {
             let arista = circActual.aristas[j];
-            let circDestino = circulos.find(c => c.Titulo == arista.Titulo);
+            let circDestino = circulos.find(c => c.Id == arista.Id);
             if (circDestino) {
                 drawArrow(context, circActual.x, circActual.y, circDestino.x, circDestino.y, circActual.radio, circDestino.radio);
             }
         }
     }
-    
+    // Dibujar las líneas entre los vértices según las aristas
+
 
 }
-//para crear la flecha 
+
 function drawArrow(context, fromX, fromY, toX, toY, fromRadius, toRadius) {
-    let headLength = 10; 
+    let headLength = 10; // longitud de la cabeza de la flecha
     let angle = Math.atan2(toY - fromY, toX - fromX);
 
-    context.beginPath();
-    context.moveTo(endX, endY);
-    context.lineTo(endX - headLength * Math.cos(angle - Math.PI / 6), endY - headLength * Math.sin(angle - Math.PI / 6));
-    context.moveTo(endX, endY);
-    context.lineTo(endX - headLength * Math.cos(angle + Math.PI / 6), endY - headLength * Math.sin(angle + Math.PI / 6));
-    context.stroke();
-
+    // Calcular los puntos finales de la línea ajustando por los radios
     let startX = fromX + Math.cos(angle) * fromRadius;
     let startY = fromY + Math.sin(angle) * fromRadius;
     let endX = toX - Math.cos(angle) * toRadius;
     let endY = toY - Math.sin(angle) * toRadius;
 
-    // crear la linea 
+    // Dibujar la línea
     context.strokeStyle = '#1c646d';
     context.beginPath();
     context.moveTo(startX, startY);
     context.lineTo(endX, endY);
     context.stroke();
 
-   
-    
+    // Dibujar la cabeza de la flecha
+    context.beginPath();
+    context.moveTo(endX, endY);
+    context.lineTo(endX - headLength * Math.cos(angle - Math.PI / 6), endY - headLength * Math.sin(angle - Math.PI / 6));
+    context.moveTo(endX, endY);
+    context.lineTo(endX - headLength * Math.cos(angle + Math.PI / 6), endY - headLength * Math.sin(angle + Math.PI / 6));
+    context.stroke();
 }
+

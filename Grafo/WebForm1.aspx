@@ -11,7 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="../CSS/Estilos.css" />
+    <link href="CSS/Estilos.css" rel="stylesheet" />
 </head>
 <body>
 
@@ -64,18 +64,20 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        
-                        <h1 class="title-user">visualizacion <span class="landing-user">del Grafo</span> </h1>
-                        <div class="d-flex justify-content-center contenerdor-img-user">
-                            <canvas id="MiCanvas" style="width: 800px; height: 600px; border: 1px solid lightgray;"></canvas>
-                        </div>
-                         <asp:Label ID="lblResultado" class="message" runat="server" Text=""></asp:Label>
-                        <asp:Button ID="btnMostrarGrafo" class="btn btn-outline-danger" runat="server" Text="Grafica Grafo" OnClick="btnMostrarGrafo_Click" />
-                    </div>
+                    
                 </div>
+                <div class="col-md-6">
+    
+    <h1 class="title-user">visualizacion <span class="landing-user">del Grafo</span> </h1>
+                    <canvas id="miCanvas" width="1200" height="800" style="border: 1px solid #000000;">Su navegador no soporta Canvas</canvas>
+    <div class="d-flex justify-content-center contenerdor-img-user">
+        
+    </div>
+     <asp:Label ID="lblResultado" class="message" runat="server" Text=""></asp:Label>
+    <asp:Button ID="btnMostrarGrafo" class="btn btn-outline-danger" runat="server" Text="Grafica Grafo" OnClick="btnMostrarGrafo_Click" />
+</div>
             </div>
-            <script type="text/javascript" src="JavaScript/circulo.js"></script>
+            <script type="text/javascript" src="JavaScript/Circulo.js"></script>
             <script type="text/javascript" src="JavaScript/Radar.js"></script>
             <script type="text/javascript" src="JavaScript/Trigonometria.js"></script>
         </section>

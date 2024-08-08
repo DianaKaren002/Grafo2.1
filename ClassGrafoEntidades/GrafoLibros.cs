@@ -26,11 +26,11 @@ namespace ClassGrafoEntidades
                     msj = "Arista agregada";
                 }
                 else
-                    msj = "La posición del Nodo Destino no exixte en la Lista de Adyacencia";
+                    msj = "La posición del Nodo Destino no existe en la Lista de Adyacencia";
             }
             else
             {
-                msj = "La posición del Nodo Origen no exixte en la Lista de Adyacencia";
+                msj = "La posición del Nodo Origen no existe en la Lista de Adyacencia";
             }
             return msj;
         }
@@ -58,7 +58,7 @@ namespace ClassGrafoEntidades
             }
             else
             {
-                msg = "La posición del nodo no exixte en la Lista de Adyacencia";
+                msg = "La posición del nodo no existe en la Lista de Adyacencia";
             }
             return salida;
         }

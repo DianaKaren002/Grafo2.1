@@ -53,7 +53,6 @@ namespace Grafo
 
         protected void btnInsertarNodo_Click(object sender, EventArgs e)
         {
-            string msj = "";
             Libro nuevo = new Libro
             {
                 Titulo = txtTitulo.Text,
@@ -64,7 +63,18 @@ namespace Grafo
             Session["grafo1"] = grafo1;
             lblResultado.Text = $"Nodo '{nuevo.Titulo}' insertado correctamente.";
 
-            ClientScript.RegisterStartupScript(this.GetType(), "MostrarGrafo",msj, true);
+            var verticesJson = JsonConvert.SerializeObject(grafo1.ListaAbyacente.Select(nodo => new {
+                nodo.Informacion.Id,
+                nodo.Informacion.Titulo,
+                aristas = nodo.enlaces.mostrarDatosColeccion().Select(a => new {
+                    IdLibro = grafo1.ListaAbyacente[a.NumVertice].Informacion.Id,
+                    TituloLibro = grafo1.ListaAbyacente[a.NumVertice].Informacion.Titulo,
+                    costo = a.Costo
+                })
+            }));
+
+            string script = $"console.log({verticesJson}); mostrarGrafo({verticesJson});";
+            ClientScript.RegisterStartupScript(this.GetType(), "MostrarGrafo", script, true);
         }
     
 
@@ -82,7 +92,18 @@ namespace Grafo
             {
                 grafo1.InsertarArco(origen, destino, costo);
                 lblResultado.Text = "Arco insertado";
-                Session["grafo1"] = grafo1;
+                var verticesJson = JsonConvert.SerializeObject(grafo1.ListaAbyacente.Select(nodo => new {
+                    nodo.Informacion.Id,
+                    nodo.Informacion.Titulo,
+                    aristas = nodo.enlaces.mostrarDatosColeccion().Select(a => new {
+                        IdLibro = grafo1.ListaAbyacente[a.NumVertice].Informacion.Id,
+                        TituloLibro = grafo1.ListaAbyacente[a.NumVertice].Informacion.Titulo,
+                        costo = a.Costo
+                    })
+                }));
+
+                string script = $"console.log({verticesJson}); mostrarGrafo({verticesJson});";
+                ClientScript.RegisterStartupScript(this.GetType(), "MostrarGrafo", script, true);
             }
         }
 

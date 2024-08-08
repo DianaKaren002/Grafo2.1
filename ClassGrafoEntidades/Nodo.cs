@@ -9,16 +9,17 @@ namespace ClassGrafoEntidades
     public class Nodo
     {
         public Libro Informacion { get; set; }
-        public ListaAristas enlaces = new ListaAristas();
+        public ListaAristas enlaces { get; set; }
 
         public Nodo(Libro informacion)
         {
             Informacion = informacion;
+            enlaces = new ListaAristas();
         }
 
-        public override string ToString()
+        public string InfoLibro()
         {
-            return Informacion.ToString();
+            return $"Id: {Informacion.Id}, Titulo: {Informacion.Titulo}, Autor: {Informacion.Autor}";
         }
 
         public string InsertaArista(int numNodo, float costo1)
