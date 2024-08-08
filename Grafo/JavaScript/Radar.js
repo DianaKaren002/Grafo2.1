@@ -53,7 +53,7 @@ function mostrarGrafo(vertices) {
         let circActual = circulos[i];
         for (let j = 0; j < circActual.aristas.length; j++) {
             let arista = circActual.aristas[j];
-            let circDestino = circulos.find(c => c.Id == arista.Id);
+            let circDestino = circulos.find(c => c.Titulo == arista.TituloLibro);
             if (circDestino) {
                 drawArrow(context, circActual.x, circActual.y, circDestino.x, circDestino.y, circActual.radio, circDestino.radio);
             }
