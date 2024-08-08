@@ -150,22 +150,22 @@ namespace Grafo
         protected global::System.Web.UI.WebControls.ListBox ListBFS;
 
         /// <summary>
-        /// Control txtDijkstraInicio.
+        /// Control DropDijkstraInicio.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDijkstraInicio;
+        protected global::System.Web.UI.WebControls.DropDownList DropDijkstraInicio;
 
         /// <summary>
-        /// Control txtDijkstraFin.
+        /// Control DropDijkstraFin.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDijkstraFin;
+        protected global::System.Web.UI.WebControls.DropDownList DropDijkstraFin;
 
         /// <summary>
         /// Control btnDijkstra.
@@ -175,6 +175,24 @@ namespace Grafo
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnDijkstra;
+
+        /// <summary>
+        /// Control Label1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label1;
+
+        /// <summary>
+        /// Control Button1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Button1;
 
         /// <summary>
         /// Control lblResultado.

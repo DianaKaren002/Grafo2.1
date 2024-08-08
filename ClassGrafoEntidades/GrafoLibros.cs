@@ -75,10 +75,20 @@ namespace ClassGrafoEntidades
             int h = 0;
             for (h = 0; h <= ListaAbyacente.Count - 1; h++)
             {
-                cads[h] = ListaAbyacente[h].ToString();
+                cads[h] = ListaAbyacente[h].InfoLibro();
             }
             return cads;
         }
+        public List<string> MuestraNumerosConsecutivos()
+        {
+            List<string> numerosConsecutivos = new List<string>();
+            for (int i = 1; i <= ListaAbyacente.Count; i++)
+            {
+                numerosConsecutivos.Add(i.ToString());
+            }
+            return numerosConsecutivos;
+        }
+
 
         public List<int> DFS(int inicio) //busqueda a profundidad 
         {
@@ -135,12 +145,12 @@ namespace ClassGrafoEntidades
             return resultado;
         }
 
-        public List<int> Dijkstra(int inicioId, int finId)  //hacer recorridos cortos entre nodos 
+        public List<int> Dijkstra(int inicioId, int finId)
         {
-            var distancias = new Dictionary<int, int>();  //almacena la distancia mas corta para poderla mostar
+            var distancias = new Dictionary<int, int>();
             var predecesores = new Dictionary<int, int>();
             var visitados = new HashSet<int>();
-            var colaPrioridad = new SortedDictionary<int, int>(); //almacena las distancias 
+            var colaPrioridad = new SortedDictionary<int, int>();
 
             // Inicializa las distancias para todos los nodos
             foreach (var nodo in nodos.Values)
@@ -168,12 +178,16 @@ namespace ClassGrafoEntidades
                         distancias[enlace.NumVertice] = int.MaxValue;
                     }
 
-                    var nuevaDistancia = distancias[actualId] + 1;
+                    // Convertir el costo de float a int
+                    int costoArista = (int)enlace.Costo;
+                    var nuevaDistancia = distancias[actualId] + costoArista;
+
                     if (nuevaDistancia < distancias[enlace.NumVertice])
                     {
                         distancias[enlace.NumVertice] = nuevaDistancia;
                         predecesores[enlace.NumVertice] = actualId;
 
+                        // Añadir a la cola de prioridad con la nueva distancia
                         if (!colaPrioridad.ContainsKey(nuevaDistancia))
                         {
                             colaPrioridad.Add(nuevaDistancia, enlace.NumVertice);
@@ -200,6 +214,16 @@ namespace ClassGrafoEntidades
             camino.Reverse();
             return camino;
         }
+        public List<int> ObtenerNodosIds()
+        {
+            List<int> ids = new List<int>();
+            foreach (var nodo in ListaAbyacente)
+            {
+                ids.Add(nodo.Informacion.Id);
+            }
+            return ids;
+        }
+
 
     }
 }

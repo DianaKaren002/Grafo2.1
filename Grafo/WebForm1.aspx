@@ -25,19 +25,19 @@
                     <div class="col-md-6">
                         <div class="container">
                             <div class="list">
-                                      
+
                                 <h2>Insertar Nodo</h2>
                                 <asp:TextBox ID="txtId" runat="server" CssClass="form-control" Placeholder="Id del Libro" TextMode="Number"></asp:TextBox><br />
 
                                 <asp:TextBox ID="txtTitulo" runat="server" CssClass="form-control" Placeholder="Título del Libro"></asp:TextBox><br />
 
                                 <asp:TextBox ID="txtAutor" runat="server" CssClass="form-control" Placeholder="Autor del Libro"></asp:TextBox><br />
-                         
+
                                 <asp:Button class="btn btn-outline-danger" ID="btnInsertarNodo" runat="server" Text="Insertar Nodo" OnClick="btnInsertarNodo_Click" /><br />
                                 <br />
-                                
 
-                                <h2>Insertar Arco</h2>
+
+                                  <h2>Insertar Arco</h2>
                                 <asp:TextBox ID="txtOrigen" runat="server" CssClass="form-control" Placeholder="Id del Nodo Origen"></asp:TextBox><br />
                                 <asp:TextBox ID="txtDestino" runat="server" CssClass="form-control" Placeholder="Id del Nodo Destino"></asp:TextBox><br />
                                 <asp:TextBox ID="txtCosto" runat="server" CssClass="form-control" Placeholder="Costo"></asp:TextBox><br />
@@ -57,25 +57,30 @@
                                 <br />
 
                                 <h2>Camino Más Corto (Dijkstra)</h2>
-                                <asp:TextBox ID="txtDijkstraInicio" runat="server" CssClass="form-control" Placeholder="Título del Nodo Inicial Dijkstra"></asp:TextBox><br />
-                                <asp:TextBox ID="txtDijkstraFin" runat="server" CssClass="form-control" Placeholder="Título del Nodo Final Dijkstra"></asp:TextBox><br />
+                                Inicio: <asp:DropDownList ID="DropDijkstraInicio" runat="server" Width="290px">
+                                </asp:DropDownList>
+                                <br />
+                                Final:<asp:DropDownList ID="DropDijkstraFin" runat="server" Width="297px">
+                                </asp:DropDownList>
+                                <br />
                                 <asp:Button class="btn btn-outline-danger" ID="btnDijkstra" runat="server" Text="Camino Más Corto" OnClick="btnDijkstra_Click" /><br />
+                                <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
+                                <asp:Button ID="Button1" runat="server" Text="Mostrar Nodos" />
                                 <br />
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
                 <div class="col-md-6">
-    
-    <h1 class="title-user">visualizacion <span class="landing-user">del Grafo</span> </h1>
+
+                    <h1 class="title-user">visualizacion <span class="landing-user">del Grafo</span> </h1>
                     <canvas id="miCanvas" width="1200" height="800" style="border: 1px solid #000000;">Su navegador no soporta Canvas</canvas>
-    <div class="d-flex justify-content-center contenerdor-img-user">
-        
-    </div>
-     <asp:Label ID="lblResultado" class="message" runat="server" Text=""></asp:Label>
-    <asp:Button ID="btnMostrarGrafo" class="btn btn-outline-danger" runat="server" Text="Grafica Grafo" OnClick="btnMostrarGrafo_Click" />
-</div>
+                    <div class="d-flex justify-content-center contenerdor-img-user">
+                    </div>
+                    <asp:Label ID="lblResultado" class="message" runat="server" Text=""></asp:Label>
+                    <asp:Button ID="btnMostrarGrafo" class="btn btn-outline-danger" runat="server" Text="Grafica Grafo" OnClick="btnMostrarGrafo_Click" />
+                </div>
             </div>
             <script type="text/javascript" src="JavaScript/Circulo.js"></script>
             <script type="text/javascript" src="JavaScript/Radar.js"></script>
@@ -84,6 +89,6 @@
 
     </form>
 
-   
+
 </body>
 </html>

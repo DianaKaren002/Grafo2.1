@@ -2,10 +2,12 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 
 namespace Grafo
 {
@@ -24,7 +26,10 @@ namespace Grafo
             {
                 grafo1 = (GrafoLibros)Session["grafo1"];
             }
+            
         }
+
+        
 
         [WebMethod]
         public static void InsertarNodo(string Titulo, string Autor, int Id)
@@ -60,6 +65,23 @@ namespace Grafo
                 Id = Convert.ToInt16(txtId.Text)
             };
             grafo1.InsertarNodo(nuevo);
+            string[] vertex = grafo1.MuestraNodos();
+
+            if (vertex != null && vertex.Length > 0)//PARA VER SI TIENE DATOS EL ARRAY
+            {
+                DropDijkstraInicio.Items.Clear();
+                DropDijkstraFin.Items.Clear();
+
+                foreach (string s in vertex)
+                {
+                    DropDijkstraInicio.Items.Add(s);//LOS INSERTA 
+                    DropDijkstraFin.Items.Add(s);
+                }
+            }
+            else
+            {
+                Label1.Text = "No hay datos";
+            }
             Session["grafo1"] = grafo1;
             lblResultado.Text = $"Nodo '{nuevo.Titulo}' insertado correctamente.";
 
@@ -76,15 +98,15 @@ namespace Grafo
             string script = $"console.log({verticesJson}); mostrarGrafo({verticesJson});";
             ClientScript.RegisterStartupScript(this.GetType(), "MostrarGrafo", script, true);
         }
-    
+
 
         protected void btnInsertarArco_Click(object sender, EventArgs e)
         {
-            int origen = Convert.ToInt16(txtOrigen.Text) -1;
-            int destino = Convert.ToInt16(txtDestino.Text) -1;
+            int origen = Convert.ToInt16(txtOrigen.Text) - 1;
+            int destino = Convert.ToInt16(txtDestino.Text) - 1;
             int costo = Convert.ToInt16(txtCosto.Text);
 
-            if(txtOrigen.Text == null && txtDestino.Text == null && txtCosto.Text == null)
+            if (txtOrigen.Text == null && txtDestino.Text == null && txtCosto.Text == null)
             {
                 lblResultado.Text = "LLena todos los datos";
             }
@@ -106,7 +128,6 @@ namespace Grafo
                 ClientScript.RegisterStartupScript(this.GetType(), "MostrarGrafo", script, true);
             }
         }
-
         protected void btnDFS_Click(object sender, EventArgs e)
         {
             int inicio = Convert.ToInt16(txtDFSInicio.Text);
@@ -149,24 +170,32 @@ namespace Grafo
 
         protected void btnDijkstra_Click(object sender, EventArgs e)
         {
-            int inicio = Convert.ToInt32(txtDijkstraInicio.Text);
-            int fin = Convert.ToInt32(txtDijkstraFin.Text);
+            
+            int inicio = Convert.ToInt32(DropDijkstraInicio.SelectedItem.Text);
+            int fin = Convert.ToInt32(DropDijkstraFin.SelectedItem.Text);
+            
+            // Limpiar los elementos existentes en los DropDownLists
 
+            DropDijkstraFin.Items.Clear();
+            DropDijkstraInicio.Items.Clear();
+            int inicio2 = inicio - 1;
+            int fin2 = fin - 1;
+            Label1.Text = $"{inicio2}  {fin2}";
             // Verificar si los IDs existen en la lista de adyacencia del grafo
-            if (inicio < 0 || inicio >= grafo1.ListaAbyacente.Count)
+            if (inicio2 < 0 || inicio2 >= grafo1.ListaAbyacente.Count)
             {
-                lblResultado.Text = $"Error: El nodo de inicio con ID '{inicio}' no existe en el grafo.";
+                lblResultado.Text = $"Error: El nodo de inicio con ID '{inicio2}' no existe en el grafo.";
                 return;
             }
 
-            if (fin < 0 || fin >= grafo1.ListaAbyacente.Count)
+            if (fin2 < 0 || fin2 >= grafo1.ListaAbyacente.Count)
             {
                 lblResultado.Text = $"Error: El nodo de destino con ID '{fin}' no existe en el grafo.";
                 return;
             }
 
             // Llamar al método Dijkstra y obtener el camino más corto
-            List<int> resultado = grafo1.Dijkstra(inicio, fin);
+            List<int> resultado = grafo1.Dijkstra(inicio2, fin2);
 
             if (resultado.Count == 0)
             {
@@ -174,20 +203,24 @@ namespace Grafo
             }
             else
             {
+                // Mostrar la ruta más corta en el label
                 lblResultado.Text = "Camino Más Corto: " + string.Join(" -> ", resultado);
-            }
-            var verticesJson = JsonConvert.SerializeObject(grafo1.ListaAbyacente.Select(nodo => new {
-                nodo.Informacion.Id,
-                nodo.Informacion.Titulo,
-                aristas = nodo.enlaces.mostrarDatosColeccion().Select(a => new {
-                    IdLibro = grafo1.ListaAbyacente[a.NumVertice].Informacion.Id,
-                    TituloLibro = grafo1.ListaAbyacente[a.NumVertice].Informacion.Titulo,
-                    costo = a.Costo
-                })
-            }));
 
-            string script = $"console.log({verticesJson}); mostrarGrafo({verticesJson});";
-            ClientScript.RegisterStartupScript(this.GetType(), "MostrarGrafo", script, true);
+                // Mostrar el grafo en el cliente
+                var verticesJson = JsonConvert.SerializeObject(grafo1.ListaAbyacente.Select(nodo => new {
+                    nodo.Informacion.Id,
+                    nodo.Informacion.Titulo,
+                    aristas = nodo.enlaces.mostrarDatosColeccion().Select(a => new {
+                        IdLibro = grafo1.ListaAbyacente[a.NumVertice].Informacion.Id,
+                        TituloLibro = grafo1.ListaAbyacente[a.NumVertice].Informacion.Titulo,
+                        costo = a.Costo
+                    })
+                }));
+
+                string script = $"console.log({verticesJson}); mostrarGrafo({verticesJson});";
+                ClientScript.RegisterStartupScript(this.GetType(), "MostrarGrafo", script, true);
+                Session["grafo1"] = grafo1;
+            }
         }
 
         protected void btnMostrarGrafo_Click(object sender, EventArgs e)
@@ -204,6 +237,27 @@ namespace Grafo
 
             string script = $"console.log({verticesJson}); mostrarGrafo({verticesJson});";
             ClientScript.RegisterStartupScript(this.GetType(), "MostrarGrafo", script, true);
+        }
+
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+            string[] vertex = grafo1.MuestraNodos();
+
+            if (vertex != null && vertex.Length > 0)
+            {
+                DropDijkstraInicio.Items.Clear();
+                DropDijkstraFin.Items.Clear();
+
+                foreach (string s in vertex)
+                {
+                    DropDijkstraInicio.Items.Add(s);
+                    DropDijkstraFin.Items.Add(s);
+                }
+            }
+            else
+            {
+                Label1.Text = "No hay datos";
+            }
         }
     }
 }

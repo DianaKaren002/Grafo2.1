@@ -20,7 +20,7 @@ namespace ClassGrafoEntidades
 
         public string InfoLibro()
         {
-            return $"Id: {Informacion.Id}, Titulo: {Informacion.Titulo}, Autor: {Informacion.Autor}";
+            return $"I{Informacion.Id}, Titulo: {Informacion.Titulo}, Autor: {Informacion.Autor}";
         }
 
         public string InsertaArista(int numNodo, float costo1)
