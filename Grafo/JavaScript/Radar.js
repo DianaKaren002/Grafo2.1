@@ -55,7 +55,7 @@ function mostrarGrafo(vertices) {
             let arista = circActual.aristas[j];
             let circDestino = circulos.find(c => c.Titulo == arista.TituloLibro);
             if (circDestino) {
-                drawArrow(context, circActual.x, circActual.y, circDestino.x, circDestino.y, circActual.radio, circDestino.radio);
+                drawArrow(context, circActual.x, circActual.y, circDestino.x, circDestino.y, circActual.radio, circDestino.radio,arista.costo);
             }
         }
     }
@@ -64,7 +64,7 @@ function mostrarGrafo(vertices) {
 
 }
 
-function drawArrow(context, fromX, fromY, toX, toY, fromRadius, toRadius) {
+function drawArrow(context, fromX, fromY, toX, toY, fromRadius, toRadius, costo) {
     let headLength = 10; // longitud de la cabeza de la flecha
     let angle = Math.atan2(toY - fromY, toX - fromX);
 
@@ -88,5 +88,13 @@ function drawArrow(context, fromX, fromY, toX, toY, fromRadius, toRadius) {
     context.moveTo(endX, endY);
     context.lineTo(endX - headLength * Math.cos(angle + Math.PI / 6), endY - headLength * Math.sin(angle + Math.PI / 6));
     context.stroke();
+
+    // Dibujar el costo en el centro de la flecha
+    context.fillStyle = '#000'; // Color del texto
+    context.font = '14px Arial'; // Fuente del texto
+    context.textAlign = 'center';
+    context.textBaseline = 'middle';
+    context.fillText(costo, (startX + endX) / 2, (startY + endY) / 2);
 }
+
 

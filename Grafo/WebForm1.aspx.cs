@@ -149,30 +149,55 @@ namespace Grafo
 
         protected void btnDijkstra_Click(object sender, EventArgs e)
         {
-            int inicio = Convert.ToInt16(txtDijkstraInicio.Text);
-            int fin = Convert.ToInt16(txtDijkstraFin.Text);
+            int inicio = Convert.ToInt32(txtDijkstraInicio.Text);
+            int fin = Convert.ToInt32(txtDijkstraFin.Text);
 
-            if (inicio != -1 && fin != -1)
+            // Verificar si los IDs existen en la lista de adyacencia del grafo
+            if (inicio < 0 || inicio >= grafo1.ListaAbyacente.Count)
             {
-                List<int> resultadoIndices = grafo1.Dijkstra(inicio, fin);
-                List<string> resultadoTitulos = resultadoIndices.Select(indice => grafo1.ListaAbyacente[indice].Informacion.Titulo).ToList();
+                lblResultado.Text = $"Error: El nodo de inicio con ID '{inicio}' no existe en el grafo.";
+                return;
+            }
 
-                lblResultado.Text = "Camino Más Corto: " + string.Join(" -> ", resultadoTitulos);
+            if (fin < 0 || fin >= grafo1.ListaAbyacente.Count)
+            {
+                lblResultado.Text = $"Error: El nodo de destino con ID '{fin}' no existe en el grafo.";
+                return;
+            }
+
+            // Llamar al método Dijkstra y obtener el camino más corto
+            List<int> resultado = grafo1.Dijkstra(inicio, fin);
+
+            if (resultado.Count == 0)
+            {
+                lblResultado.Text = "No se encontró un camino entre los nodos especificados.";
             }
             else
             {
-                lblResultado.Text = "Error: Verifique que ambos nodos existen en el grafo.";
+                lblResultado.Text = "Camino Más Corto: " + string.Join(" -> ", resultado);
             }
+            var verticesJson = JsonConvert.SerializeObject(grafo1.ListaAbyacente.Select(nodo => new {
+                nodo.Informacion.Id,
+                nodo.Informacion.Titulo,
+                aristas = nodo.enlaces.mostrarDatosColeccion().Select(a => new {
+                    IdLibro = grafo1.ListaAbyacente[a.NumVertice].Informacion.Id,
+                    TituloLibro = grafo1.ListaAbyacente[a.NumVertice].Informacion.Titulo,
+                    costo = a.Costo
+                })
+            }));
+
+            string script = $"console.log({verticesJson}); mostrarGrafo({verticesJson});";
+            ClientScript.RegisterStartupScript(this.GetType(), "MostrarGrafo", script, true);
         }
 
         protected void btnMostrarGrafo_Click(object sender, EventArgs e)
         {
             var verticesJson = JsonConvert.SerializeObject(grafo1.ListaAbyacente.Select(nodo => new {
-                Id = nodo.Informacion.Id,
-                Titulo = nodo.Informacion.Titulo,
+                nodo.Informacion.Id,
+                nodo.Informacion.Titulo,
                 aristas = nodo.enlaces.mostrarDatosColeccion().Select(a => new {
-                    numeroDato = grafo1.ListaAbyacente[a.NumVertice].Informacion.Id,
-                    nombreDato = grafo1.ListaAbyacente[a.NumVertice].Informacion.Titulo,
+                    IdLibro = grafo1.ListaAbyacente[a.NumVertice].Informacion.Id,
+                    TituloLibro = grafo1.ListaAbyacente[a.NumVertice].Informacion.Titulo,
                     costo = a.Costo
                 })
             }));

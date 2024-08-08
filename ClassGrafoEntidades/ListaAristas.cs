@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ClassGrafoEntidades
 {
-    public class ListaAristas : IEnumerable<ListaNodos>
+    public class ListaAristas : IEnumerable<ListaNodos> //IEnumerable para hacer los recorridos
     {
         public ListaNodos inicio = null;
         private int contElementos = 0;
@@ -57,7 +57,7 @@ namespace ClassGrafoEntidades
             }
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator() // se re quiere para la interfaz
         {
             return GetEnumerator();
         }

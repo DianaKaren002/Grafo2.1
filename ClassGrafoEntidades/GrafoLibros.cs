@@ -8,7 +8,13 @@ namespace ClassGrafoEntidades
 {
     public class GrafoLibros
     {
+        public Dictionary<int, Nodo> nodos; 
         public List<Nodo> ListaAbyacente = new List<Nodo>();
+        public List<Arista> Adyacentes { get; set; }//no se ocupa
+        public GrafoLibros()
+        {
+            nodos = new Dictionary<int, Nodo>(); // Inicialización de nodos
+        }
 
         public void InsertarNodo(Libro informacion)
         {
@@ -74,7 +80,7 @@ namespace ClassGrafoEntidades
             return cads;
         }
 
-        public List<int> DFS(int inicio)
+        public List<int> DFS(int inicio) //busqueda a profundidad 
         {
             List<int> resultado = new List<int>();
             bool[] visitado = new bool[ListaAbyacente.Count];
@@ -103,7 +109,7 @@ namespace ClassGrafoEntidades
             return resultado;
         }
 
-        public List<int> BFS(int inicio)
+        public List<int> BFS(int inicio)//busqueda en amplitud 
         {
             List<int> resultado = new List<int>();
             bool[] visitado = new bool[ListaAbyacente.Count];
@@ -129,58 +135,71 @@ namespace ClassGrafoEntidades
             return resultado;
         }
 
-        public List<int> Dijkstra(int inicio, int fin)
+        public List<int> Dijkstra(int inicioId, int finId)  //hacer recorridos cortos entre nodos 
         {
-            var distancias = new Dictionary<int, float>();
+            var distancias = new Dictionary<int, int>();  //almacena la distancia mas corta para poderla mostar
             var predecesores = new Dictionary<int, int>();
             var visitados = new HashSet<int>();
-            var colaPrioridad = new SortedDictionary<float, int>();
+            var colaPrioridad = new SortedDictionary<int, int>(); //almacena las distancias 
 
-            for (int i = 0; i < ListaAbyacente.Count; i++)
+            // Inicializa las distancias para todos los nodos
+            foreach (var nodo in nodos.Values)
             {
-                distancias[i] = float.MaxValue;
+                distancias[nodo.Informacion.Id] = int.MaxValue;
             }
-            distancias[inicio] = 0;
-            colaPrioridad.Add(0, inicio);
+            distancias[inicioId] = 0;
+            colaPrioridad.Add(0, inicioId);
 
             while (colaPrioridad.Count > 0)
             {
-                var actual = colaPrioridad.First().Value;
+                var actualId = colaPrioridad.First().Value;
                 colaPrioridad.Remove(colaPrioridad.First().Key);
 
-                if (visitados.Contains(actual)) continue;
+                if (visitados.Contains(actualId)) continue;
 
-                visitados.Add(actual);
+                visitados.Add(actualId);
 
-                foreach (var arista in ListaAbyacente[actual].enlaces)
+                var nodoActual = ListaAbyacente[actualId];
+                foreach (var enlace in nodoActual.enlaces)
                 {
-                    var nuevaDistancia = distancias[actual] + arista.Costo;
-
-                    if (nuevaDistancia < distancias[arista.NumVertice])
+                    // Asegúrate de que la clave exista en el diccionario antes de acceder
+                    if (!distancias.ContainsKey(enlace.NumVertice))
                     {
-                        distancias[arista.NumVertice] = nuevaDistancia;
-                        predecesores[arista.NumVertice] = actual;
+                        distancias[enlace.NumVertice] = int.MaxValue;
+                    }
+
+                    var nuevaDistancia = distancias[actualId] + 1;
+                    if (nuevaDistancia < distancias[enlace.NumVertice])
+                    {
+                        distancias[enlace.NumVertice] = nuevaDistancia;
+                        predecesores[enlace.NumVertice] = actualId;
 
                         if (!colaPrioridad.ContainsKey(nuevaDistancia))
                         {
-                            colaPrioridad.Add(nuevaDistancia, arista.NumVertice);
+                            colaPrioridad.Add(nuevaDistancia, enlace.NumVertice);
                         }
                     }
                 }
             }
 
             var camino = new List<int>();
-            var paso = fin;
+            var paso = finId;
 
-            while (paso != inicio)
+            while (paso != inicioId)
             {
                 camino.Add(paso);
+                if (!predecesores.ContainsKey(paso))
+                {
+                    // No se encontró un camino
+                    return new List<int>();
+                }
                 paso = predecesores[paso];
             }
 
-            camino.Add(inicio);
+            camino.Add(inicioId);
             camino.Reverse();
             return camino;
         }
+
     }
 }

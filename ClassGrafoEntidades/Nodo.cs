@@ -10,6 +10,7 @@ namespace ClassGrafoEntidades
     {
         public Libro Informacion { get; set; }
         public ListaAristas enlaces { get; set; }
+        
 
         public Nodo(Libro informacion)
         {
