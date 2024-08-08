@@ -80,8 +80,8 @@ namespace Grafo
 
         protected void btnInsertarArco_Click(object sender, EventArgs e)
         {
-            int origen = Convert.ToInt16(txtOrigen.Text);
-            int destino = Convert.ToInt16(txtDestino.Text);
+            int origen = Convert.ToInt16(txtOrigen.Text) -1;
+            int destino = Convert.ToInt16(txtDestino.Text) -1;
             int costo = Convert.ToInt16(txtCosto.Text);
 
             if(txtOrigen.Text == null && txtDestino.Text == null && txtCosto.Text == null)
