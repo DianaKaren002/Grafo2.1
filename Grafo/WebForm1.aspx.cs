@@ -170,17 +170,16 @@ namespace Grafo
 
         protected void btnDijkstra_Click(object sender, EventArgs e)
         {
-            
-            int inicio = Convert.ToInt32(DropDijkstraInicio.SelectedItem.Text);
-            int fin = Convert.ToInt32(DropDijkstraFin.SelectedItem.Text);
-            
-            // Limpiar los elementos existentes en los DropDownLists
+            // Convertir los valores seleccionados en los DropDownLists a IDs de nodo
+            int inicio = Convert.ToInt32(DropDijkstraInicio.SelectedIndex.ToString());
+            int fin = Convert.ToInt32(DropDijkstraFin.SelectedIndex.ToString());
 
-            DropDijkstraFin.Items.Clear();
-            DropDijkstraInicio.Items.Clear();
-            int inicio2 = inicio - 1;
-            int fin2 = fin - 1;
+            // Ajustar los índices
+            int inicio2 = inicio ;
+            int fin2 = fin ;
+
             Label1.Text = $"{inicio2}  {fin2}";
+
             // Verificar si los IDs existen en la lista de adyacencia del grafo
             if (inicio2 < 0 || inicio2 >= grafo1.ListaAbyacente.Count)
             {
@@ -190,21 +189,21 @@ namespace Grafo
 
             if (fin2 < 0 || fin2 >= grafo1.ListaAbyacente.Count)
             {
-                lblResultado.Text = $"Error: El nodo de destino con ID '{fin}' no existe en el grafo.";
+                lblResultado.Text = $"Error: El nodo de destino con ID '{fin2}' no existe en el grafo.";
                 return;
             }
 
-            // Llamar al método Dijkstra y obtener el camino más corto
-            List<int> resultado = grafo1.Dijkstra(inicio2, fin2);
+            // Llamar al método Dijkstra y obtener el camino más corto en títulos
+            List<string> titulosCamino = grafo1.Dijkstra(inicio, fin);
 
-            if (resultado.Count == 0)
+            if (titulosCamino.Count < 0)
             {
                 lblResultado.Text = "No se encontró un camino entre los nodos especificados.";
             }
             else
             {
                 // Mostrar la ruta más corta en el label
-                lblResultado.Text = "Camino Más Corto: " + string.Join(" -> ", resultado);
+                lblResultado.Text = "Camino Más Corto: " + string.Join(" -> ", titulosCamino);
 
                 // Mostrar el grafo en el cliente
                 var verticesJson = JsonConvert.SerializeObject(grafo1.ListaAbyacente.Select(nodo => new {
@@ -222,6 +221,7 @@ namespace Grafo
                 Session["grafo1"] = grafo1;
             }
         }
+
 
         protected void btnMostrarGrafo_Click(object sender, EventArgs e)
         {

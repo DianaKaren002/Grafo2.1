@@ -145,7 +145,7 @@ namespace ClassGrafoEntidades
             return resultado;
         }
 
-        public List<int> Dijkstra(int inicioId, int finId)
+        public List<string> Dijkstra(int inicioId, int finId)
         {
             var distancias = new Dictionary<int, int>();
             var predecesores = new Dictionary<int, int>();
@@ -205,15 +205,25 @@ namespace ClassGrafoEntidades
                 if (!predecesores.ContainsKey(paso))
                 {
                     // No se encontró un camino
-                    return new List<int>();
+                    return new List<string>();
                 }
                 paso = predecesores[paso];
             }
 
             camino.Add(inicioId);
             camino.Reverse();
-            return camino;
+
+            // Convertir los IDs a títulos de libros
+            var titulosCamino = new List<string>();
+            foreach (var id in camino)
+            {
+                var nodo = ListaAbyacente[id];
+                titulosCamino.Add(nodo.Informacion.Titulo);
+            }
+
+            return titulosCamino;
         }
+
         public List<int> ObtenerNodosIds()
         {
             List<int> ids = new List<int>();
